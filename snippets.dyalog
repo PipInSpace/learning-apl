@@ -27,12 +27,13 @@ from_bits←{(8⍴2)⊥⍵}
 block16←{{4 4⍴⍵}¨↓((⊃⌈(⍴⍵)÷16) 16)⍴⍵}
 
 ⍝ substitute byte values ⍵ through Rijndael S-Boxes
-subBytes←{{sboxes[⍵]}¨⍵}
+subBytes←{{sboxes[⍵+1]}¨⍵}
 
 ⍝ TODO:
 addRoundKey←{⍵}
-shiftRows←{⍵}
+shiftRows←{(0 1 2 3)⌽⍵}
 mixColumns←{⍵}
+expandKeys←{⍵}
 
 ⍝ Chunk up file into a 4x4 matrix of 8 Bits each
 chunk128←{to_bits¨(4 4)⍴(⎕NREAD (tie←'path'⎕NTIE 0) 83 ¯1 0)}
@@ -41,4 +42,7 @@ chunk128←{to_bits¨(4 4)⍴(⎕NREAD (tie←'path'⎕NTIE 0) 83 ¯1 0)}
 openf←{⎕NREAD (tie←⍵⎕NTIE 0) 83 ¯1 0}
 
 ⍝ without functions
-aes128←{∊{(8⍴2)⊥¨addRoundKey shiftRows (8⍴2)⊤¨{sboxes[⍵]}¨(8⍴2)⊥¨{addRoundKey mixColumns shiftRows (8⍴2)⊤¨{sboxes[⍵]}¨(8⍴2)⊥¨⍵}⍣9 ⊢ addRoundKey ⍵}¨{4 4⍴⍵}¨↓((⊃⌈(⍴⍺)÷16) 16)⍴⍺ ⊣ keys←expandKeys ⍵}
+⍝ aes128←{∊{(8⍴2)⊥⊢¨addRoundKey (0 1 2 3)⌽(8⍴2)⊤¨{sboxes[⍵+1]}¨(8⍴2)⊥⊢¨{addRoundKey mixColumns (0 1 2 3)⌽(8⍴2)⊤⊢¨{sboxes[⍵+1]}¨(8⍴2)⊥⊢¨⍵}⍣9 ⊢ addRoundKey ⍵}¨{4 4⍴⍵}¨↓((⊃⌈(⍴⍺)÷16) 16)⍴⍺ ⊣ keys←expandKeys ⍵}
+⍝ working elements:
+⍝ ∊{from_bits¨{shiftRows to_bits¨subBytes from_bits¨⍵}⍣9⊢to_bits¨⍵}¨block16 ⍳32
+⍝ ∊{{(8⍴2)⊥⍵}¨{(0 1 2 3)⌽{(8⍴2)⊤⍵}¨{sboxes[⍵+1]}¨{(8⍴2)⊥⍵}¨⍵}⍣9⊢{(8⍴2)⊤⍵}¨⍵}¨{{4 4⍴⍵}¨↓((⊃⌈(⍴⍵)÷16) 16)⍴⍵}⍳32

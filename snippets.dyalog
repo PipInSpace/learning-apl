@@ -27,7 +27,7 @@ from_bits←{(8⍴2)⊥⍵}
 block16←{{4 4⍴⍵}¨↓((⊃⌈(⍴⍵)÷16) 16)⍴⍵}
 
 ⍝ converts a vector ⍵ of 4x4 matrices into a vector
-deblock16←{⊃,/{⊃↓(1 16)⍴⍵}¨⍵}
+deblock16←{⊃,/{,⍵}¨⍵}
 
 ⍝ substitute byte values ⍵ through Rijndael S-Boxes
 subBytes←{{sboxes[⍵]}¨⍵}
@@ -44,4 +44,4 @@ chunk128←{to_bits¨(4 4)⍴(⎕NREAD (tie←'path'⎕NTIE 0) 83 ¯1 0)
 openf←{⎕NREAD (tie←⍵⎕NTIE 0) 83 ¯1 0}
 
 ⍝ without functions
-aes128←{⊃,/{⊃↓(1 16)⍴⍵}¨{addRoundKey shiftRows (8⍴2)⊤¨{sboxes[⍵]}¨(8⍴2)⊥¨{addRoundKey mixColumns shiftRows (8⍴2)⊤¨{sboxes[⍵]}¨(8⍴2)⊥¨⍵}⍣9 ⊢ addRoundKey ⍵}¨{4 4⍴⍵}¨↓((⊃⌈(⍴⍺)÷16) 16)⍴⍺ ⊣ keys←expandKeys ⍵}
+aes128←{⊃,/{,⍵}¨{addRoundKey shiftRows (8⍴2)⊤¨{sboxes[⍵]}¨(8⍴2)⊥¨{addRoundKey mixColumns shiftRows (8⍴2)⊤¨{sboxes[⍵]}¨(8⍴2)⊥¨⍵}⍣9 ⊢ addRoundKey ⍵}¨{4 4⍴⍵}¨↓((⊃⌈(⍴⍺)÷16) 16)⍴⍺ ⊣ keys←expandKeys ⍵}

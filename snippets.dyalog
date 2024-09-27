@@ -31,7 +31,7 @@ subBytes←{{sboxes[⍵+1]}¨⍵}
 
 ⍝ TODO:
 addRoundKey←{⍵}
-shiftRows←{(0 1 2 3)⌽⍵}
+shiftRows←{(0 1 2 3)⌽⍵} ⍝ shiftRows←{(1-⍨⍳4)⌽⍵}
 mixColumns←{⍵}
 expandKeys←{⍵}
 

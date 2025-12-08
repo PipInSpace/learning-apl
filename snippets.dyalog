@@ -8,6 +8,9 @@ split←{⍵⊆⍨~⍵∊⍺}
 ⍝ Count the number of chars before encountering a char inncluded in the first argument. ⍺: list of chars  ⍵: string 
 count_to←{+/∧\~⍺∊⍵}
 
+⍝ Computes the variance of array ⍵
+variance ← {(+/2*⍨⍵-+/⍵÷⍴⍵)÷⍴⍵}
+
 
 ⍝ Structure of an AES encryption implementation one-line
 ⍝ ⍺: data as bytes
